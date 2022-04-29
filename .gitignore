@@ -1,0 +1,7 @@
+float/
+qat/
+quantized/
+YOLOX_outputs/
+code/demo/
+code/yolox.egg-info
+code/.qat
