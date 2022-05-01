@@ -5,7 +5,7 @@ from typing import List
 import cv2
 import numpy as np
 import xir
-from code.application.subgraph import prepare_postprocess
+from general.visualize import visual
 import vart
 import os
 import time
@@ -13,11 +13,12 @@ import time
 from general.preproc import *
 from general.exec import *
 from general.postproc import *
+from general.visualize import *
 
 img_path = 'sign.jpg'
 test_size = [640,640]
-img = cv2.imread(img_path)
-prepd_img, _ = preproc(img,test_size)
+# img = cv2.imread(img_path)
+img, prepd_img, img_info, _ = preproc(img_path,test_size)
 
 model_name = 'YOLOX_zcu104.xmodel'
 g = xir.Graph.deserialize(model_name)
@@ -55,3 +56,18 @@ outputs = [output1,output2,output3]
 
 o1 = prepare_postprocess(outputs)
 o2 = postprocess(o1,45)
+
+result_image = visual(outputs[0],img_info)
+
+
+
+current_time = time.localtime()
+vis_folder = 'YOLOX_OUTPUTS'
+save_result = True
+
+save_folder = os.path.join(vis_folder, time.strftime("%Y_%m_%d_%H_%M_%S", current_time))
+os.makedirs(save_folder, exist_ok=True)
+save_file_name = os.path.join(save_folder, os.path.basename(img_path))
+cv2.imwrite(save_file_name, result_image)
+
+
